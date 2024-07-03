@@ -16,7 +16,7 @@
   boot.loader.grub = {
     enable = true;
     device = "nodev";
-    efiSupport = true;
+    efiSupport = false;
     efiInstallAsRemovable = false;
     useOSProber = true;
   };
@@ -86,12 +86,23 @@
   users.users.luca = {
     isNormalUser = true;
     description = "luca";
+    initialPassword = "asdf";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
     #  thunderbird
     ];
   };
-
+  # Disable password requirement for user "luca" for root access
+  security.sudo.extraRules = [
+  {
+    users = [ "luca" ];
+    commands = [ 
+      { command = "ALL";
+        options = [ "NOPASSWD" ];
+      }
+    ];
+    }
+  ];
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [ zsh ];
   programs = {
