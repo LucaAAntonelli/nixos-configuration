@@ -4,7 +4,19 @@
 
 { config, pkgs, ... }:
 
-{
+  # Retrieve Machine ID to distinguish laptop from desktop
+  let 
+    machineId = builtins.readFile /etc/machine-id;
+    tracedMachineId = builtins.trace "Machine Id: ${machineId}" machineId;
+  in {
+      boot.loader.grub = {
+        enable = true;
+        device = "nodev";
+        efiSupport = if machineId == "f096c0145f444b96bfbb66bab92e6a51" then true else false;
+        efiInstallAsRemovable = false;
+        useOSProber = true;
+      };
+
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -12,14 +24,6 @@
 
   # Bootloader.
   boot.loader.systemd-boot.enable = false;
-
-  boot.loader.grub = {
-    enable = true;
-    device = "nodev";
-    efiSupport = false;
-    efiInstallAsRemovable = false;
-    useOSProber = true;
-  };
 
   boot.loader.efi.canTouchEfiVariables = true;
   
@@ -48,8 +52,24 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  
+
+  hardware.opengl = { 
+    enable = true;
+  };
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    powerManagement.enable = false;
+
+    powerManagement.finegrained = false;
+
+    nvidiaSettings = true;
+  };
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "ch";
@@ -187,5 +207,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }
