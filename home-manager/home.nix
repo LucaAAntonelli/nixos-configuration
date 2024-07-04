@@ -67,6 +67,7 @@
   #
   #  /etc/profiles/per-user/luca/etc/profile.d/hm-session-vars.sh
   #
+  wayland.windowManager.hyprland.enable = true;
 
   home.sessionVariables = {
     # EDITOR = "emacs";
