@@ -12,7 +12,7 @@
       boot.loader.grub = {
         enable = true;
         device = "nodev";
-        efiSupport = if machineId == "f096c0145f444b96bfbb66bab92e6a51" then true else false;
+        efiSupport = true;
         efiInstallAsRemovable = false;
         useOSProber = true;
       };
@@ -190,8 +190,11 @@
   # services.openssh.enable = true;
   
   # Add JetBrains mono nerd font
+  fonts.fontDir.enable = true;
+
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; } )
+    nerdfonts
+    font-awesome
   ];
 
   # Open ports in the firewall.
