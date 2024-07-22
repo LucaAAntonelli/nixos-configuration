@@ -153,7 +153,10 @@
 
   # Install firefox.
   programs.firefox.enable = true;
-  programs.steam.enable = true; 
+  programs.steam.enable = true;
+  programs.tmux = {
+    enable = true;
+  };
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -174,6 +177,7 @@
     steam
     wpsoffice
     zsh-powerlevel10k
+    tmux
 ];
 
   # Some programs need SUID wrappers, can be configured further or are
